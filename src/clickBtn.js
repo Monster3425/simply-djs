@@ -1,6 +1,6 @@
 const Discord = require('discord.js')
 
-async function clickBtn(button, options = []) {
+async function clickBtn(button, db, options = []) {
   if (button.isButton()) {
     try {
       if (options.credit === false) {
@@ -18,14 +18,20 @@ async function clickBtn(button, options = []) {
 
           if (button.member.roles.cache.find(r => r.id === real.id)) {
 
-            button.reply({ content: 'You already have the role. Removing it now', ephemeral: true })
+            button.reply({
+              content: 'You already have the role. Removing it now',
+              ephemeral: true
+            })
 
             button.member.roles.remove(real).catch(err => button.message.channel.send('ERROR: Role is higher than me. MISSING_PERMISSIONS'))
 
 
           } else {
 
-            button.reply({ content: `Gave you the role Name: ${real.name} | ID: ${real.id}`, ephemeral: true })
+            button.reply({
+              content: `Gave you the role Name: ${real.name} | ID: ${real.id}`,
+              ephemeral: true
+            })
 
             button.member.roles.add(real).catch(err => button.message.channel.send('ERROR: Role is higher than me. MISSING_PERMISSIONS'))
           }
@@ -34,7 +40,10 @@ async function clickBtn(button, options = []) {
       }
 
 
-      let { MessageButton, MessageActionRow } = require('discord.js')
+      let {
+        MessageButton,
+        MessageActionRow
+      } = require('discord.js')
 
       if (button.customId === 'create_ticket') {
 
@@ -86,7 +95,10 @@ async function clickBtn(button, options = []) {
         }
 
         if (antispamo) {
-          button.reply({ content: options.cooldownMsg || 'You already have a ticket opened.. Please delete it before opening another ticket.', ephemeral: true })
+          button.reply({
+            content: options.cooldownMsg || 'You already have a ticket opened.. Please delete it before opening another ticket.',
+            ephemeral: true
+          })
 
         } else if (!antispamo) {
           button.deferUpdate();
@@ -98,13 +110,14 @@ async function clickBtn(button, options = []) {
 
           chparent = options.categoryID || null
           let categ = button.guild.channels.cache.get(options.categoryID)
-          if (!categ) { chparent = null }
+          if (!categ) {
+            chparent = null
+          }
 
           button.guild.channels.create(`ticket_${button.user.id}`, {
             type: "text",
             parent: chparent,
-            permissionOverwrites: [
-              {
+            permissionOverwrites: [{
                 id: button.message.guild.roles.everyone,
                 deny: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'] //Deny permissions
               },
@@ -135,11 +148,17 @@ async function clickBtn(button, options = []) {
             let closerow = new MessageActionRow()
               .addComponents([close_btn])
 
-            ch.send({ content: `${button.user}`, embeds: [emb], components: [closerow] })
+            ch.send({
+              content: `${button.user}`,
+              embeds: [emb],
+              components: [closerow]
+            })
 
             if (options.timeout === true || !options.timeout) {
               setTimeout(() => {
-                ch.send({ content: 'Timeout.. You have reached 10 minutes. This ticket is getting deleted right now.' })
+                ch.send({
+                  content: 'Timeout.. You have reached 10 minutes. This ticket is getting deleted right now.'
+                })
 
                 setTimeout(() => {
                   ch.delete()
@@ -155,10 +174,10 @@ async function clickBtn(button, options = []) {
         button.deferUpdate();
 
         button.channel.permissionOverwrites.edit(button.user.id, {
-          SEND_MESSAGES: false,
-          VIEW_CHANNEL: true
-        })
-          .catch((err) => { })
+            SEND_MESSAGES: false,
+            VIEW_CHANNEL: true
+          })
+          .catch((err) => {})
 
         let X_btn = new MessageButton()
           .setStyle(options.delColor || 'SECONDARY')
@@ -183,7 +202,11 @@ async function clickBtn(button, options = []) {
           .setColor(options.embedColor || '#075FFF')
           .setFooter(foot)
 
-        button.message.edit({ content: `${button.user}`, embeds: [emb], components: [row] })
+        button.message.edit({
+          content: `${button.user}`,
+          embeds: [emb],
+          components: [row]
+        })
       }
 
       if (button.customId === 'open_ticket') {
@@ -191,7 +214,7 @@ async function clickBtn(button, options = []) {
         button.channel.permissionOverwrites.edit(button.user.id, {
           SEND_MESSAGES: true,
           VIEW_CHANNEL: true
-        }).catch((err) => { })
+        }).catch((err) => {})
 
         let emb = new Discord.MessageEmbed()
           .setTitle('Ticket Created')
@@ -211,8 +234,15 @@ async function clickBtn(button, options = []) {
         let closerow = new MessageActionRow()
           .addComponents([close_btn])
 
-        button.message.edit({ content: `${button.user}`, embedDesc: [emb], components: [closerow] })
-        button.reply({ content: 'Reopened the ticket ;)', ephemeral: true })
+        button.message.edit({
+          content: `${button.user}`,
+          embedDesc: [emb],
+          components: [closerow]
+        })
+        button.reply({
+          content: 'Reopened the ticket ;)',
+          ephemeral: true
+        })
 
       }
 
@@ -238,34 +268,51 @@ async function clickBtn(button, options = []) {
           .setColor('#c90000')
           .setFooter(foot)
 
-        button.reply({ embeds: [emb], components: [row1] })
+        button.reply({
+          embeds: [emb],
+          components: [row1]
+        })
 
 
       }
 
       if (button.customId === 's_ticket') {
 
-        button.reply({ content: 'Deleting the ticket and channel.. Please wait.' })
+        button.reply({
+          content: 'Deleting the ticket and channel.. Please wait.'
+        })
 
         setTimeout(() => {
           let delch = button.message.guild.channels.cache.get(button.message.channel.id)
           delch.delete().catch((err) => {
-            button.message.channel.send({ content: 'An Error Occured. ' + err, ephemeral: true })
+            button.message.channel.send({
+              content: 'An Error Occured. ' + err,
+              ephemeral: true
+            })
           })
         }, 2000)
       }
 
       if (button.customId === 'no_ticket') {
         button.message.delete();
-        button.reply({ content: 'Ticket Deletion got canceled', ephemeral: true })
+        button.reply({
+          content: 'Ticket Deletion got canceled',
+          ephemeral: true
+        })
       }
       let db = options.db
       if (button.customId === 'reroll-giveaway') {
         if (!button.member.permissions.has('ADMINISTRATOR')) {
 
-          button.reply({ content: 'Only Admins can Reroll the giveaway..', ephemeral: true })
+          button.reply({
+            content: 'Only Admins can Reroll the giveaway..',
+            ephemeral: true
+          })
         } else {
-          button.reply({ content: 'Rerolling the giveaway ⚙️', ephemeral: true })
+          button.reply({
+            content: 'Rerolling the giveaway ⚙️',
+            ephemeral: true
+          })
 
           let oldembed = button.message.embeds[0]
 
@@ -286,7 +333,10 @@ async function clickBtn(button, options = []) {
             .setFooter("Giveaway Ending.. Wait a moment.")
 
           setTimeout(() => {
-            button.message.edit({ embeds: [embeddd], components: [] })
+            button.message.edit({
+              embeds: [embeddd],
+              components: []
+            })
           }, 1000)
 
           let winner = []
@@ -295,7 +345,12 @@ async function clickBtn(button, options = []) {
           let winnerNumber = await db.get(`giveaway_winnerCount_${button.message.id}`)
 
           let entero = await db.get(`giveaway_entered_${button.message.id}`)
-          if (!entero) { button.reply({ content: 'An Error Occured. Please try again.', ephemeral: true }) }
+          if (!entero) {
+            button.reply({
+              content: 'An Error Occured. Please try again.',
+              ephemeral: true
+            })
+          }
 
           for (let i = 0; winnerNumber > i; i++) {
             let winnumber = Math.floor((Math.random() * wino.length))
@@ -319,9 +374,13 @@ async function clickBtn(button, options = []) {
                 .setTitle('No one remaining')
                 .setColor(0xcc0000)
                 .setDescription(`**We rerolled and no one is remaining.**\n\n` + oldembed.description.replace(`React with the buttons to interact with giveaway.`, ' ').replace('Ends', 'Ended'))
-                .addFields(
-                  { name: '🏆 Winner(s):', value: `none` },
-                  { name: '💝 People Entered', value: `***${entero}***` }
+                .addFields({
+                    name: '🏆 Winner(s):',
+                    value: `none`
+                  }, {
+                    name: '💝 People Entered',
+                    value: `***${entero}***`
+                  }
 
                 )
                 .setFooter("Giveaway Ended.")
@@ -330,7 +389,10 @@ async function clickBtn(button, options = []) {
               let msgwonid = await db.get(`giveaway_${button.message.id}_yaywon`)
               let msgwon = await button.message.channel.messages.fetch(msgwonid)
               msgwon.delete()
-              button.message.edit({ embeds: [embedod], components: [] })
+              button.message.edit({
+                embeds: [embedod],
+                components: []
+              })
             } else {
               const enterr = new Discord.MessageButton()
                 .setLabel('Enter')
@@ -353,16 +415,24 @@ async function clickBtn(button, options = []) {
                 .addComponents([enterr, rerolll, endd])
 
               let entero = await db.get(`giveaway_entered_${button.message.id}`)
-              if (!entero) { button.message.send({ content: 'An Error Occured. Please try again.', ephemeral: true }) }
+              if (!entero) {
+                button.message.send({
+                  content: 'An Error Occured. Please try again.',
+                  ephemeral: true
+                })
+              }
 
               const embedd = new Discord.MessageEmbed()
                 .setTitle('Giveaway Ended')
                 .setColor(0x3BB143)
                 .setDescription(oldembed.description.replace(`React with the buttons to interact with giveaway.`, ' ').replace('Ends', 'Ended'))
-                .addFields(
-                  { name: '🏆 Winner(s):', value: `${winner}` },
-                  { name: '💝 People Entered', value: `***${entero}***` }
-                )
+                .addFields({
+                  name: '🏆 Winner(s):',
+                  value: `${winner}`
+                }, {
+                  name: '💝 People Entered',
+                  value: `***${entero}***`
+                })
                 .setFooter("Giveaway Ended.")
 
               let winmsgreroll = await db.get(`giveaway_${button.message.id}_yaywon`)
@@ -381,11 +451,18 @@ async function clickBtn(button, options = []) {
                 .setDescription(`🏆 Winner(s): ***${winnerNumber}***`)
                 .setFooter("Dm the host to claim your prize 0_0")
 
-              winreroll.edit({ content: `Congrats ${winboiz}. You just won the giveaway.`, embeds: [embb], components: [ro] }).then(async m => {
+              winreroll.edit({
+                content: `Congrats ${winboiz}. You just won the giveaway.`,
+                embeds: [embb],
+                components: [ro]
+              }).then(async m => {
                 await db.set(`giveaway_${button.message.id}_yaywon`, m.id)
               })
 
-              button.message.edit({ embeds: [embedd], components: [roww] })
+              button.message.edit({
+                embeds: [embedd],
+                components: [roww]
+              })
 
 
             }
@@ -396,9 +473,15 @@ async function clickBtn(button, options = []) {
       if (button.customId === 'end-giveaway') {
         if (!button.member.permissions.has('ADMINISTRATOR')) {
 
-          button.reply({ content: 'Only Admins can End the giveaway..', ephemeral: true })
+          button.reply({
+            content: 'Only Admins can End the giveaway..',
+            ephemeral: true
+          })
         } else {
-          button.reply({ content: 'Ending the giveaway ⚙️', ephemeral: true })
+          button.reply({
+            content: 'Ending the giveaway ⚙️',
+            ephemeral: true
+          })
 
           let wino = []
           let oldembed = button.message.embeds[0]
@@ -418,7 +501,10 @@ async function clickBtn(button, options = []) {
             .setFooter("Giveaway Ending.. Wait a moment.")
 
           setTimeout(() => {
-            button.message.edit({ embeds: [embeddd], components: [] })
+            button.message.edit({
+              embeds: [embeddd],
+              components: []
+            })
           }, 1000)
 
 
@@ -436,14 +522,21 @@ async function clickBtn(button, options = []) {
                 .setTitle('No one entered')
                 .setColor(0xcc0000)
                 .setDescription(`**No one entered the giveaway ;(.**\n\n` + oldembed.description.replace(`React with the buttons to interact with giveaway.`, ' ').replace('Ends', 'Ended'))
-                .addFields(
-                  { name: '🏆 Winner(s):', value: `none` },
-                  { name: '💝 People Entered', value: `***${winnnerNumber}***` }
+                .addFields({
+                    name: '🏆 Winner(s):',
+                    value: `none`
+                  }, {
+                    name: '💝 People Entered',
+                    value: `***${winnnerNumber}***`
+                  }
 
                 )
                 .setFooter("Giveaway Ended.")
 
-              button.message.edit({ embeds: [embedod], components: [] })
+              button.message.edit({
+                embeds: [embedod],
+                components: []
+              })
 
             } else {
 
@@ -491,10 +584,13 @@ async function clickBtn(button, options = []) {
                 .setTitle('Giveaway Ended')
                 .setColor(0x3BB143)
                 .setDescription(oldembed.description.replace(`React with the buttons to interact with giveaway.`, ' ').replace('Ends', 'Ended'))
-                .addFields(
-                  { name: '🏆 Winner(s):', value: `${winner}` },
-                  { name: '💝 People Entered', value: `***${entero}***` }
-                )
+                .addFields({
+                  name: '🏆 Winner(s):',
+                  value: `${winner}`
+                }, {
+                  name: '💝 People Entered',
+                  value: `***${entero}***`
+                })
                 .setFooter("Giveaway Ended.")
 
               const embb = new Discord.MessageEmbed()
@@ -512,12 +608,19 @@ async function clickBtn(button, options = []) {
               const ro = new Discord.MessageActionRow()
                 .addComponents([gothere])
 
-              button.channel.send({ content: `Congrats ${winboiz}. You just won the giveaway.`, embeds: [embb], components: [ro] }).then(async m => {
+              button.channel.send({
+                content: `Congrats ${winboiz}. You just won the giveaway.`,
+                embeds: [embb],
+                components: [ro]
+              }).then(async m => {
                 await db.set(`giveaway_${button.message.id}_yaywon`, m.id)
               })
 
 
-              button.message.edit({ embeds: [embedd], components: [roww] })
+              button.message.edit({
+                embeds: [embedd],
+                components: [roww]
+              })
 
 
             }

@@ -35,7 +35,7 @@ async function giveawaySystem(client, db, message, options = []) {
 
       const embed = new Discord.MessageEmbed()
         .setTitle(options.embedTitle || 'Giveaways')
-        .setColor(0x075FFF)
+        .setColor('BLURPLE')
         .setTimestamp(Number(Date.now() + ms(time)))
         .setFooter('Ends ', 'https://media.discordapp.net/attachments/867344516600037396/881941206513377331/869185703228084285.gif')
         .setDescription(`React with the buttons to interact with giveaway.\n\n**🎁 Prize:** ***${options.prize || prize}***\n\n**⌛ Ends:** <t:${whytime}:R>\n\n**🎉 Hosted By:** ***${message.user}***`)
@@ -61,7 +61,7 @@ async function giveawaySystem(client, db, message, options = []) {
 
             const embeddd = new Discord.MessageEmbed()
               .setTitle('Processing Data...')
-              .setColor(0xcc0000)
+              .setColor('BLURPLE')
               .setDescription(`Please wait.. We are Processing the winner with magiks`)
               .setFooter("Giveaway Ending.. Wait a moment.")
 
@@ -80,7 +80,7 @@ async function giveawaySystem(client, db, message, options = []) {
 
               const embedod = new Discord.MessageEmbed()
                 .setTitle('No one Entered.')
-                .setColor(0xcc0000)
+                .setColor('BLURPLE')
                 .setDescription(`**Sadly No one entered the giveaway ;(**\n\n**🎁 Prize:** ***${options.prize || prize}***\n\n**🎉 Hosted By:** ***${message.user}***`)
                 .addFields(
                   { name: '🏆 Winner(s):', value: `none` },
